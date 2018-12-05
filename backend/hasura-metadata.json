@@ -1,0 +1,243 @@
+{
+    "remote_schemas": [],
+    "tables": [
+        {
+            "table": "session",
+            "object_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "gig"
+                    },
+                    "name": "gigBygig",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "user"
+                    },
+                    "name": "userByuser",
+                    "comment": null
+                }
+            ],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "most_recent_performance",
+            "object_relationships": [],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "song_recordings",
+            "object_relationships": [],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "gig",
+            "object_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "band"
+                    },
+                    "name": "bandByband",
+                    "comment": null
+                }
+            ],
+            "array_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "gig",
+                            "table": "performance"
+                        }
+                    },
+                    "name": "performancesBygig",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "gig",
+                            "table": "session"
+                        }
+                    },
+                    "name": "sessionsBygig",
+                    "comment": null
+                }
+            ],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "band",
+            "object_relationships": [],
+            "array_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "band",
+                            "table": "gig"
+                        }
+                    },
+                    "name": "gigsByband",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "band",
+                            "table": "user_band"
+                        }
+                    },
+                    "name": "userBandsByband",
+                    "comment": null
+                }
+            ],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "user_band",
+            "object_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "band"
+                    },
+                    "name": "bandByband",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "user"
+                    },
+                    "name": "userByuser",
+                    "comment": null
+                }
+            ],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "performance",
+            "object_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "gig"
+                    },
+                    "name": "gigBygig",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": "song"
+                    },
+                    "name": "songBysong",
+                    "comment": null
+                }
+            ],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "song",
+            "object_relationships": [],
+            "array_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "song",
+                            "table": "performance"
+                        }
+                    },
+                    "name": "performancesBysong",
+                    "comment": null
+                }
+            ],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "song_latest_performance",
+            "object_relationships": [],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "song_performances",
+            "object_relationships": [],
+            "array_relationships": [],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        },
+        {
+            "table": "user",
+            "object_relationships": [],
+            "array_relationships": [
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "user",
+                            "table": "session"
+                        }
+                    },
+                    "name": "sessionsByuser",
+                    "comment": null
+                },
+                {
+                    "using": {
+                        "foreign_key_constraint_on": {
+                            "column": "user",
+                            "table": "user_band"
+                        }
+                    },
+                    "name": "userBandsByuser",
+                    "comment": null
+                }
+            ],
+            "insert_permissions": [],
+            "select_permissions": [],
+            "update_permissions": [],
+            "delete_permissions": [],
+            "event_triggers": []
+        }
+    ],
+    "query_templates": []
+}

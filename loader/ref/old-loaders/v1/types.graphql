@@ -1,0 +1,88 @@
+# The following types define the data model of the example service
+# based on which the GraphQL API is generated
+
+type User @model {
+  # Required system field:
+  id: ID! @isUnique # read-only (managed by Graphcool)
+
+  # Optional system fields (remove if not needed):
+  createdAt: DateTime! # read-only (managed by Graphcool)
+  updatedAt: DateTime! # read-only (managed by Graphcool)
+
+  # Required by Graphcool but not managed by Graphcool
+  email: String! @isUnique
+  password: String!
+
+  fullName: String
+  stageName: String
+
+  bands: [Band!]! @relation(name: "BandPlayers")
+  gigs: [Gig!]! @relation(name: "GigPlayers")
+  adminBands: [Band!]! @relation(name: "BandAdmins")
+}
+
+
+type Band @model {
+  id: ID! @isUnique
+  name: String! @isUnique
+
+  viewableByOthers: Boolean! @defaultValue(value: "false")
+  editableByOthers: Boolean! @defaultValue(value: "false")
+
+  admin: User! @relation(name: "BandAdmins")
+  players: [User!]! @relation(name: "BandPlayers")
+  gigs: [Gig!]! @relation(name: "BandGigs")
+}
+
+type Song @model {
+  id: ID! @isUnique
+  name: String! @isUnique
+  artist: String
+  prehistory: Int!
+
+  performances: [Performance!]! @relation(name: "SongPerformances")
+}
+
+type Gig @model {
+  id: ID! @isUnique
+  venue: String!
+  date: DateTime
+  recorded: Boolean! @defaultValue(value: "false")
+
+  performances: [Performance!]! @relation(name: "GigPerformances")
+
+  band: Band! @relation(name: "BandGigs")
+  players: [User!]! @relation(name: "GigPlayers")
+}
+
+type Tag @model {
+  id: ID! @isUnique
+  value: String
+
+  tagClass: TagClass! @relation(name: "ClassTag")
+  performances: [Performance!]! @relation(name: "PerformanceTags")
+}
+
+enum TagType {
+    TEXT
+    NUMBER
+    FLAG
+}
+
+type TagClass @model {
+  id: ID! @isUnique
+  name: String @isUnique
+  valueType: TagType!
+
+  tags: [Tag!]! @relation(name: "ClassTag")
+}
+
+type Performance @model {
+  id: ID! @isUnique
+  serial: Int! @defaultValue(value: 1)
+  stars: Int! @defaultValue(value: 0)
+
+  song: Song! @relation(name: "SongPerformances")
+  gig: Gig! @relation(name: "GigPerformances")
+  tags: [Tag!]! @relation(name: "PerformanceTags")
+}

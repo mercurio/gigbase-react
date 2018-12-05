@@ -1,0 +1,10 @@
+#!/bin/tcsh
+
+foreach i ( songs/x*csv )
+    cp $i songs.csv
+    node loader.js
+    echo $status
+    echo $i
+    sleep 2
+    end
+
