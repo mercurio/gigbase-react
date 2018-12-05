@@ -40,3 +40,6 @@ list will show the most recent performance for each song.
 
 The code in `./loader` was used to load data from a prior, single-table database. If you have data you need to import this
 would be a good starting point, otherwise this directory can be ignored.
+
+
+Released under the MIT License
