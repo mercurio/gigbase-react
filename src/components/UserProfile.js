@@ -2,13 +2,16 @@
  * Edit the profile of the currently logged-in user
  */
 import React from 'react'
-import PropTypes from 'prop-types'
+import {withApollo} from 'react-apollo'
 
 import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
+
+import history from '../history';
+import {getSessionId} from '../sessionId'
 
 import {
   USER_PROFILE_QUERY,
@@ -22,8 +25,6 @@ class UserProfileComponent extends React.Component {
 
     this.constants = {
       client: props.client,
-      sessionId: context.sessionId,
-      history: props.history
     }
 
     this.state = {
@@ -36,7 +37,7 @@ class UserProfileComponent extends React.Component {
 
     this.props.client.query({
       query: USER_PROFILE_QUERY,
-      variables: {session: this.constants.sessionId}
+      variables: {session: getSessionId()}
     }).then(result => {
       const u = result.data.session_by_pk.userByuser;
       this.setState({
@@ -72,19 +73,19 @@ class UserProfileComponent extends React.Component {
         stageName: this.state.stageName
       },
       refetchQueries: [
-        {query: LOGGED_IN_USER_QUERY, variables: {session: this.constants.sessionId}},
-        {query: USER_PROFILE_QUERY, variables: {session: this.constants.sessionId}}
+        {query: LOGGED_IN_USER_QUERY, variables: {session: getSessionId()}},
+        {query: USER_PROFILE_QUERY, variables: {session: getSessionId()}}
       ]
     })
 
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   render() {
@@ -142,10 +143,6 @@ class UserProfileComponent extends React.Component {
   }
 }
 
-UserProfileComponent.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 const styles = theme => ({
   mainWrapper: { backgroundColor: theme.palette.background.paper },
 
@@ -181,4 +178,4 @@ const styles = theme => ({
 
 const UserProfile = withStyles(styles)(UserProfileComponent)
 
-export {USER_PROFILE_QUERY, UserProfile}
+export default withApollo(UserProfile)

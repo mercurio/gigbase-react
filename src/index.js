@@ -1,17 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom'
+import {makeMainRoutes} from './routes'
 
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker'
+import './index.css'
 
 require('dotenv').config()
 
-ReactDOM.render((
-  <HashRouter>
-    <App />
-  </HashRouter>
-), document.getElementById('root'));
+const routes = makeMainRoutes()
+
+ReactDOM.render(
+  routes,
+  document.getElementById('root')
+)
 
 registerServiceWorker();

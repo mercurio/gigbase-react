@@ -6,12 +6,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Query} from 'react-apollo'
 
-import {GET_SESSION_QUERY} from '../db'
+import {GET_SESSION_ID_QUERY} from '../db'
 
 
 export const InitSession = ({children, onLogin}) => (
-  <Query query={GET_SESSION_QUERY} variables={{email: 'neon@leadbone.com'}}>
+  <Query query={GET_SESSION_ID_QUERY}>
     {({loading, error, data}) => {
+      debugger
       if(loading) return null
       if(error) return null
 

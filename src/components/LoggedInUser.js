@@ -8,14 +8,13 @@
  * caching doesn't work and we get an error. See https://github.com/apollographql/react-apollo/issues/1003
  */
 import React from 'react'
-import PropTypes from 'prop-types'
 import {Query} from 'react-apollo'
 
 import {LOGGED_IN_USER_QUERY} from '../db'
+import {getSessionId} from '../sessionId'
 
-
-export const LoggedInUser = (props,{sessionId}) => (
-  <Query query={LOGGED_IN_USER_QUERY} variables={{session: sessionId}}>
+export const LoggedInUser = () => (
+  <Query query={LOGGED_IN_USER_QUERY} variables={{session: getSessionId()}}>
     {({loading, error, data}) => {
       if(loading) return "Loading...";
       if(error) return "Please log in";
@@ -25,7 +24,3 @@ export const LoggedInUser = (props,{sessionId}) => (
     }}
   </Query>
 )
-
-LoggedInUser.contextTypes = {
-  sessionId: PropTypes.string
-}

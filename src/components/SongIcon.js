@@ -54,8 +54,4 @@ SongIcon.propTypes = {
   onNewSong: PropTypes.func.isRequired
 }
 
-SongIcon.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 export default SongIcon

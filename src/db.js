@@ -8,6 +8,46 @@ import gql from 'graphql-tag'
 /** Queries **/
 
 /*
+ * See if the username/password is valid
+ */
+export const VALIDATE_USER_QUERY = gql`
+  query validate_user($user: String!, $pass: String!) {
+    user(where: {
+      _and: [
+        {email: {_eq: $user}}, 
+        {password: {_eq: $pass}}
+      ]
+    }) {
+      id
+    }
+  }
+`
+
+/*
+ * Get the user id given a user email
+ */
+export const GET_USERID_QUERY = gql`
+  query get_userid_for_user($email: String!) {
+    user(where: {email: {_eq: $email}}) {
+      id
+    }
+  }
+`
+
+/*
+ * Get the session given a user email
+ */
+export const GET_SESSION_QUERY = gql`
+  query get_session_for_user($email: String!) {
+    user(where: {email: {_eq: $email}}) {
+      sessionsByuser {
+        id
+      }
+    }
+  }
+`
+
+/*
  * Given a session id, get the opened gig and the count of its performances
  */
 export const GET_OPENED_GIG_AND_PERFORMANCES_QUERY = gql`
@@ -126,19 +166,6 @@ export const GET_GIGS_QUERY = gql`
 `
 
 /*
- * Get the session given a user email
- */
-export const GET_SESSION_QUERY = gql`
-  query get_session_for_user($email: String!) {
-    user(where: {email: {_eq: $email}}) {
-      sessionsByuser {
-        id
-      }
-    }
-  }
-`
-
-/*
  * Get the logged-in user given a session id
  */
 export const LOGGED_IN_USER_QUERY = gql`
@@ -227,6 +254,40 @@ export const USER_PROFILE_QUERY = gql`
 
 /** Mutations **/
 
+
+/*
+ * Upsert the user in the session table, returning the
+ * existing session for the user if there is one.
+ */
+export const OPEN_SESSION_UPSERT = gql`
+  mutation open_session($user: uuid!) {
+    insert_session(
+      objects: [
+        {user: $user}
+      ]
+      on_conflict: {constraint: session_user_key}
+    ) {
+      affected_rows
+      returning {
+        id
+      }
+    }
+  }
+`
+
+/*
+ * Update the gig in the given session
+ */
+export const SET_SESSION_GIG_MUTATION = gql`
+  mutation set_session($session: uuid!, $gig: uuid) {
+    update_session(
+      where: {id: {_eq: $session}},
+      _set: {gig: $gig}
+    ) {
+      affected_rows
+    }
+  }
+`
 /*
  * Create a new performance
  */
@@ -330,20 +391,6 @@ export const SET_USER_NAMES_MUTATION = gql`
     update_user(
       where: {id: {_eq: $user}},
       _set: {fullName: $fullName, stageName: $stageName}
-    ) {
-      affected_rows
-    }
-  }
-`
-
-/*
- * Update the gig in the given session
- */
-export const SET_SESSION_GIG_MUTATION = gql`
-  mutation set_session($session: uuid!, $gig: uuid) {
-    update_session(
-      where: {id: {_eq: $session}},
-      _set: {gig: $gig}
     ) {
       affected_rows
     }

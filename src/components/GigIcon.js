@@ -17,6 +17,7 @@ import NoGigIcon from '@material-ui/icons/QueueMusic'
 import GigOpenIcon from '@material-ui/icons/PlaylistAdd'
 
 import {GET_OPENED_GIG_AND_PERFORMANCES_QUERY} from '../db'
+import {getSessionId} from '../sessionId'
 
 class GigIcon extends React.Component {
   constructor(props, context) {
@@ -51,7 +52,6 @@ class GigIcon extends React.Component {
 
   render() {
     const {onNewGig} = this.props
-    const {sessionId} = this.context
     const {menuAnchor} = this.state
     const isMenuOpen = Boolean(menuAnchor)
 
@@ -70,7 +70,7 @@ class GigIcon extends React.Component {
     )
 
     return (
-      <Query query={GET_OPENED_GIG_AND_PERFORMANCES_QUERY} variables={{session: sessionId}}>
+      <Query query={GET_OPENED_GIG_AND_PERFORMANCES_QUERY} variables={{session: getSessionId()}}>
         {({loading, error, data}) => {
           if(loading) return <LoadingIcon />
 
@@ -117,10 +117,6 @@ GigIcon.propTypes = {
   onNewGig: PropTypes.func.isRequired,
   onEditGig: PropTypes.func.isRequired,
   onCloseGig: PropTypes.func.isRequired
-}
-
-GigIcon.contextTypes = {
-  sessionId: PropTypes.string
 }
 
 export default GigIcon

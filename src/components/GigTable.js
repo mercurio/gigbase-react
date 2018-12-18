@@ -3,7 +3,7 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Query} from 'react-apollo'
+import {Query, withApollo} from 'react-apollo'
 
 import {withStyles} from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
@@ -12,7 +12,10 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 
 import GigCard from './GigCard'
+import history from '../history';
 import {today} from '../util'
+import {getSessionId} from '../sessionId'
+
 import {
   GET_GIGS_QUERY,
   NEW_GIG_MUTATION,
@@ -51,14 +54,6 @@ const GigData = ({onOpenGig}) => (
 
 
 class GigTableComponent extends React.Component {
-  constructor(props, context) {
-    super(props)
-
-    this.constants = {
-      sessionId: context.sessionId
-    }
-  }
-
   /*
    * Create a new gig with today's date
    */
@@ -76,20 +71,20 @@ class GigTableComponent extends React.Component {
     await this.props.client.mutate({
       mutation: SET_SESSION_GIG_MUTATION,
       variables: {
-        session: this.constants.sessionId,
+        session: getSessionId(),
         gig: id
       },
       refetchQueries: [
-        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: this.constants.sessionId}},
+        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: getSessionId()}},
         {query: GIG_BANDS_AND_PERFORMANCES_QUERY, variables: {gig: id}}
       ]
     })
 
-    this.props.history.push(`/gig/${id}`)
+    history.push(`/gig/${id}`)
   }
 
   onOpenGig = (id) => {
-    this.props.history.push(`/gig/${id}`)
+    history.push(`/gig/${id}`)
   }
 
   render() {
@@ -112,10 +107,6 @@ class GigTableComponent extends React.Component {
       </Grid>
     )
   }
-}
-
-GigTableComponent.contextTypes = {
-  sessionId: PropTypes.string
 }
 
 GigTableComponent.propTypes = {
@@ -144,4 +135,4 @@ const styles = theme => ({
 
 const GigTable = withStyles(styles)(GigTableComponent)
 
-export {GigTable}
+export default withApollo(GigTable)

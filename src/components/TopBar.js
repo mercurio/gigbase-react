@@ -5,19 +5,23 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
+import {withApollo} from 'react-apollo'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
-import { fade } from '@material-ui/core/styles/colorManipulator'
-import { withStyles } from '@material-ui/core/styles'
+import {fade} from '@material-ui/core/styles/colorManipulator'
+import {withStyles} from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 
+import history from '../history';
 import {LoggedInUser} from './LoggedInUser'
 import SongIcon from './SongIcon'
 import GigIcon from './GigIcon'
 import UserIcon from './UserIcon'
+
+import {getSessionId, setSessionId} from '../sessionId'
 
 import {
   GET_OPENED_GIG_QUERY,
@@ -28,37 +32,28 @@ import {
 
 
 class TopBar extends React.Component {
-  constructor(props, context) {
-    super(props)
-
-    this.constants = {
-      sessionId: context.sessionId,
-      history: props.history
-    }
-
-    this.state = {
-    }
-  }
-
   /*
    * Go to gig list to select or create a gig
    */
   handleNewGig = event => {
-    this.constants.history.push('/gigs')
+    history.push('/gigs')
   }
 
   /*
    * Go to the user profile form
    */
   handleMyAccount = () => {
-    this.constants.history.push('/user')
+    history.push('/user')
   }
 
   /*
    * Log out, deleting the session
    */
   handleLogOut = () => {
-    this.constants.history.push('/')
+    this.props.onLogOut()
+
+    setSessionId('')
+    window.location.reload()
   }
 
   /*
@@ -68,15 +63,15 @@ class TopBar extends React.Component {
     const result = await this.props.client.query({
       query: GET_OPENED_GIG_QUERY,
       variables: {
-        session: this.constants.sessionId
+        session: getSessionId()
       }
     })
 
     const id = result.data.session_by_pk.gig;
     if(id)
-      this.constants.history.push(`/gig/${id}`)
+      history.push(`/gig/${id}`)
     else
-      this.constants.history.push('/gigs')
+      history.push('/gigs')
   }
 
   /*
@@ -86,12 +81,12 @@ class TopBar extends React.Component {
     await this.props.client.mutate({
       mutation: SET_SESSION_GIG_MUTATION,
       variables: {
-        session: this.constants.sessionId,
+        session: getSessionId(),
         gig: null
       },
       refetchQueries: [
-        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: this.constants.sessionId}},
-        {query: GET_OPENED_GIG_QUERY, variables: {session: this.constants.sessionId}},
+        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: getSessionId()}},
+        {query: GET_OPENED_GIG_QUERY, variables: {session: getSessionId()}},
         {query: GET_GIGS_QUERY}
       ]
     })
@@ -101,7 +96,7 @@ class TopBar extends React.Component {
    * Go to the song edit page to add a new song
    */
   handleNewSong = () => {
-    this.constants.history.push('/song/new')
+    history.push('/song/new')
   }
 
   /*
@@ -109,7 +104,7 @@ class TopBar extends React.Component {
    * goes to the song list.
    */
   handleOpenDrawer = () => {
-    this.constants.history.push('/songs')
+    history.push('/songs')
   }
 
   /*
@@ -141,10 +136,7 @@ class TopBar extends React.Component {
 
 TopBar.propTypes = {
   classes: PropTypes.object.isRequired,
-}
-
-TopBar.contextTypes = {
-  sessionId: PropTypes.string
+  onLogOut: PropTypes.func.isRequired
 }
 
 /* Search input
@@ -252,4 +244,5 @@ const styles = theme => ({
     },
   },
 });
-export default withStyles(styles)(TopBar);
+
+export default withApollo(withStyles(styles)(TopBar))

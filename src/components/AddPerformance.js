@@ -3,13 +3,16 @@
  * given an existing performance as the starting point.
  */
 import React from 'react'
-import PropTypes from 'prop-types'
 import {withRouter} from 'react-router'
+import {withApollo} from 'react-apollo'
 
 import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+
+import history from '../history';
+import {getSessionId} from '../sessionId'
 
 import {
   PERFORMANCE_QUERY,
@@ -28,8 +31,6 @@ class AddPerformanceComponent extends React.Component {
 
     this.constants = {
       client: props.client,
-      sessionId: context.sessionId,
-      history: props.history,
       gig: props.match.params.gig,
       perf: props.match.params.perf,
       song: props.match.params.song
@@ -57,7 +58,6 @@ class AddPerformanceComponent extends React.Component {
 
     const serial = result.data.gig_by_pk.performancesBygig_aggregate.aggregate.count+1
 
-    debugger
     if(this.constants.perf === 'new') {
       result = await this.props.client.query({
         query: SONG_QUERY,
@@ -114,21 +114,21 @@ class AddPerformanceComponent extends React.Component {
         serial: this.state.serial
       },
       refetchQueries: [
-        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: this.constants.sessionId}},
+        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: getSessionId()}},
         {query: GIG_BANDS_AND_PERFORMANCES_QUERY, variables: {gig: this.constants.gig}},
-        {query: SONGS_QUERY,  variables: {session: this.constants.sessionId}},
+        {query: SONGS_QUERY,  variables: {session: getSessionId()}},
         {query: GIG_COUNT_QUERY,  variables: {gig: this.constants.gig}}
       ]
     })
 
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    this.constants.history.goBack()
+    history.goBack()
   }
 
 
@@ -205,10 +205,6 @@ class AddPerformanceComponent extends React.Component {
   }
 }
 
-AddPerformanceComponent.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -220,4 +216,4 @@ const styles = theme => ({
 
 const AddPerformance = withStyles(styles)(withRouter(AddPerformanceComponent))
 
-export default AddPerformance
+export default withApollo(AddPerformance)

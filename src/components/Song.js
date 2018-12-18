@@ -2,13 +2,16 @@
  * Edit a song, usually used to create a new song
  */
 import React from 'react'
-import PropTypes from 'prop-types'
 import {withRouter} from 'react-router'
+import {withApollo} from 'react-apollo'
 
 import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+
+import history from '../history';
+import {getSessionId} from '../sessionId'
 
 import {
   SONG_QUERY,
@@ -24,9 +27,7 @@ class SongComponent extends React.Component {
     super(props)
 
     this.constants = {
-      sessionId: context.sessionId,
       client: props.client,
-      history: props.history,
       song: props.match.params.id,
       newSong: props.match.params.id === 'new'  // indicates we're creating a new song
     }
@@ -76,7 +77,7 @@ class SongComponent extends React.Component {
         },
         refetchQueries: [
           {query: GET_SONG_COUNT_QUERY},
-          {query: SONGS_QUERY, variables: {session: this.constants.sessionId}},
+          {query: SONGS_QUERY, variables: {session: getSessionId()}},
         ]
       })
     } else {
@@ -90,19 +91,19 @@ class SongComponent extends React.Component {
         },
         refetchQueries: [
           {query: SONG_QUERY, variables: {song: this.constants.song}},
-          {query: SONGS_QUERY, variables: {session: this.constants.sessionId}},
+          {query: SONGS_QUERY, variables: {session: getSessionId()}},
         ]
       })
     }
 
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    this.constants.history.goBack()
+    history.goBack()
   }
 
 
@@ -168,10 +169,6 @@ class SongComponent extends React.Component {
   }
 }
 
-SongComponent.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -183,4 +180,4 @@ const styles = theme => ({
 
 const Song = withStyles(styles)(withRouter(SongComponent))
 
-export default Song
+export default withApollo(Song)

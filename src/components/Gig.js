@@ -2,8 +2,8 @@
  * Edit a gig
  */
 import React from 'react'
-import PropTypes from 'prop-types'
 import {withRouter} from 'react-router'
+import {withApollo} from 'react-apollo'
 
 import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -16,7 +16,10 @@ import RecChip from './RecChip'
 import BandMenu from './BandMenu'
 import PerformanceCard from './PerformanceCard'
 
+import history from '../history';
 import {today} from '../util'
+import {getSessionId} from '../sessionId'
+
 import {
   GIG_BANDS_AND_PERFORMANCES_QUERY,
   UPDATE_GIG_MUTATION,
@@ -31,8 +34,6 @@ class GigComponent extends React.Component {
 
     this.constants = {
       client: props.client,
-      sessionId: context.sessionId,
-      history: props.history,
       gig: props.match.params.id
     }
 
@@ -96,20 +97,20 @@ class GigComponent extends React.Component {
         band: band
       },
       refetchQueries: [
-        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: this.constants.sessionId}},
+        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: getSessionId()}},
         {query: GIG_BANDS_AND_PERFORMANCES_QUERY, variables: {gig: this.constants.gig}},
         {query: GET_GIGS_QUERY}
       ]
     })
 
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    this.constants.history.goBack()
+    history.goBack()
   }
 
   /*
@@ -194,10 +195,6 @@ class GigComponent extends React.Component {
   }
 }
 
-GigComponent.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -209,4 +206,4 @@ const styles = theme => ({
 
 const Gig = withStyles(styles)(withRouter(GigComponent))
 
-export default Gig
+export default withApollo(Gig)

@@ -72,8 +72,4 @@ UserIcon.propTypes = {
   onLogOut: PropTypes.func.isRequired
 }
 
-UserIcon.contextTypes = {
-  sessionId: PropTypes.string
-}
-
 export default UserIcon

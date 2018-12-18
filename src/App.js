@@ -1,90 +1,114 @@
 import React, {Component, Fragment} from 'react'
-import PropTypes from 'prop-types'
-import {Switch, Route} from 'react-router-dom'
+import Async from 'react-async'
+import {withApollo} from 'react-apollo'
+
 import './App.css'
 import 'typeface-roboto'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
-import { ApolloProvider } from 'react-apollo'
-import {persistCache} from 'apollo-cache-persist'
-import createHistory from "history/createHashHistory"
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
-import {InitSession} from './components/InitSession'
-import TopBar from './components/TopBar'
 import SongTable from './components/SongTable'
-import LoginPage from './components/LoginPage'
-import {UserProfile} from './components/UserProfile'
-import {GigTable} from './components/GigTable'
+import UserProfile from './components/UserProfile'
+import GigTable from './components/GigTable'
 import Gig from './components/Gig'
 import Song from './components/Song'
 import AddPerformance from './components/AddPerformance'
 
+import history from './history'
+import {hasSessionId, setSessionId} from './sessionId'
 
-const history = createHistory()
-const cache = new InMemoryCache()
+import {
+  GET_USERID_QUERY,
+  OPEN_SESSION_UPSERT
+} from './db'
 
-persistCache({
-  cache,
-  storage: window.localStorage
-})
 
-const client = new ApolloClient({
-  cache,
-  link: new HttpLink({
-    uri: process.env.REACT_APP_GIGBASE_ENDPOINT,
-    headers: {
-      "Content-Type": "application/json",
-      "X-Hasura-Access-Key": process.env.REACT_APP_GIGBASE_KEY
-    }
-  })
-})
+import TopBar from './components/TopBar'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.sessionId = process.env.REACT_APP_GIGBASE_SESSION_ID   // temporarily always connect to the same session
+  pages = {
+    songs: SongTable,
+    user: UserProfile,
+    gigs: GigTable,
+    gig: Gig,
+    song: Song,
+    addperf: AddPerformance
   }
 
-  getChildContext() {
-    return {
-      sessionId: this.sessionId
-    }
+  goTo = (route) => history.replace(`/$route`)
+  login = () => this.props.auth.login()
+  logout = () => this.props.auth.logout()
+
+  /*
+   * Initialize the session if it's not already there,
+   * first finding the logged in user's email and then
+   * upserting a session for that user.
+   * 
+   * We should already be authenticated, so we should
+   * at least have the email in local storage. In
+   * development, we should already have a session
+   * (create the user and session rows by hand).
+   */
+  initSession = async () => {
+    if(hasSessionId()) return true
+
+    const result = await this.props.client.query({
+      query: GET_USERID_QUERY,
+      variables: {email: localStorage.getItem('auth0:email')}
+    })
+
+    const userid = result.data.user[0].id
+
+    const result2 = await this.props.client.mutate({
+      mutation: OPEN_SESSION_UPSERT,
+      variables: {user: userid},
+      refetchQueries: []
+    })
+
+    setSessionId(result2.data.insert_session.returning[0].id)
   }
 
   render(props) {
-    let xprops = {...props, history, client}
+    const {isAuthenticated} = this.props.auth
 
+    const Page = this.pages[this.props.page || 'songs']
+
+    if(isAuthenticated() || hasSessionId()) return (
+      <Async promiseFn={this.initSession}>
+        <Async.Loading>Loading...</Async.Loading>
+        <Async.Resolved>
+          {data => (
+            <Fragment>
+              <CssBaseline />
+              <TopBar {...props} onLogOut={this.logout}/>
+              <Grid container justify="center">
+                  <Page {...props} />
+              </Grid>
+            </Fragment>
+          )}
+        </Async.Resolved>
+        <Async.Rejected>{error => error.message}</Async.Rejected>
+      </Async>
+    )
+
+    // Not logged in, show login button instead
     return (
-      <ApolloProvider client={client}>
-        <InitSession onLogin={id => this.sessionId = id}>
-          <Fragment>
-            <CssBaseline />
-            <TopBar {...xprops} />
-            <Grid container justify="center">
-              <Switch>
-                <Route exact path='/' component={() => (<LoginPage {...xprops} />)}/>
-                <Route exact path='/songs' component={() => (<SongTable {...xprops} />)}/>
-                <Route exact path='/user' component={() => (<UserProfile {...xprops} />)}/>
-                <Route exact path='/gigs' component={() => (<GigTable {...xprops} />)}/>
-                <Route exact path='/gig/:id' component={() => (<Gig {...xprops} />)}/>
-                <Route exact path='/song/:id' component={() => (<Song {...xprops} />)}/>
-                <Route exact path='/addperf/:perf/:gig/:song' component={() => (<AddPerformance {...xprops} />)}/>
-              </Switch>
-            </Grid>
-          </Fragment>
-        </InitSession>
-      </ApolloProvider>
+      <Fragment>
+        <CssBaseline />
+        <Button 
+          id="qsLoginBtn"
+          variant="contained"
+          color="primary"
+          className="btn-margin"
+          onClick={this.login}
+        >
+        Log In
+        </Button>
+      </Fragment>
     )
   }
 }
 
-App.childContextTypes = {
-  sessionId: PropTypes.string
-}
-
-export default App
+export default withApollo(App)

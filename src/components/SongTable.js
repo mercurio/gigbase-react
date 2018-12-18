@@ -17,11 +17,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button'
 
+import history from '../history';
+import {getSessionId} from '../sessionId'
 import {SONGS_QUERY} from '../db'
 
 
-const SongData = ({sessionId, history, onAddGenFunc}) => (
-  <Query query={SONGS_QUERY} variables={{session:sessionId}}>
+const SongData = ({onAddGenFunc}) => (
+  <Query query={SONGS_QUERY} variables={{session:getSessionId()}}>
   {({loading, error, data}) => {
     if(loading) return <TableRow key="1"><CustomTableCell>Loading</CustomTableCell></TableRow>;
     if(error) return <TableRow key="1"><CustomTableCell>Error: ${error.toString()}</CustomTableCell></TableRow>;
@@ -64,7 +66,7 @@ class SongTableComponent extends React.Component {
    */
   addPerfOrSong = (perf,gig,song) => () => {
     perf = perf || 'new'
-    this.props.history.push(`/addPerf/${perf}/${gig}/${song}`)
+    history.push(`/addPerf/${perf}/${gig}/${song}`)
   }
 
   render() {
@@ -82,16 +84,12 @@ class SongTableComponent extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            <SongData className={classes.row} sessionId={this.context.sessionId} history={this.props.history} onAddGenFunc={this.addPerfOrSong}/>
+            <SongData className={classes.row} onAddGenFunc={this.addPerfOrSong}/>
           </TableBody>
         </Table>
       </Paper>
     )
   }
-}
-
-SongTableComponent.contextTypes = {
-  sessionId: PropTypes.string
 }
 
 SongTableComponent.propTypes = {
