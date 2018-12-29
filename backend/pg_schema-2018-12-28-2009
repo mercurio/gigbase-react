@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.6 (Ubuntu 10.6-1.pgdg14.04+1)
+-- Dumped from database version 10.6 (Ubuntu 10.6-1.pgdg16.04+1)
 -- Dumped by pg_dump version 10.6 (Ubuntu 10.6-1.pgdg16.04+1)
 
 SET statement_timeout = 0;
@@ -125,6 +125,314 @@ $_$;
 
 
 ALTER FUNCTION hdb_catalog.last_agg(anyelement, anyelement) OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__band(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__band() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."band"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."band" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."band" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."band" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."band" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__band() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__gig(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__gig() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."gig"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."gig" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."gig" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."gig" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."gig" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__gig() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__performance(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__performance() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."performance"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."performance" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."performance" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."performance" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."performance" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__performance() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__session(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__session() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."session"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."session" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."session" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."session" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."session" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__session() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__song(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__song() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."song"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."song" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."song" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."song" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."song" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__song() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__user(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__user() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."user"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."user" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."user" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."user" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."user" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__user() OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__user_band(); Type: FUNCTION; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE FUNCTION hdb_views.user__insert__public__user_band() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE r "public"."user_band"%ROWTYPE;
+  DECLARE conflict_clause jsonb;
+  DECLARE action text;
+  DECLARE constraint_name text;
+  DECLARE set_expression text;
+  BEGIN
+    conflict_clause = current_setting('hasura.conflict_clause')::jsonb;
+    IF ('true') THEN
+      CASE
+        WHEN conflict_clause = 'null'::jsonb THEN INSERT INTO "public"."user_band" VALUES (NEW.*) RETURNING * INTO r;
+        ELSE
+          action = conflict_clause ->> 'action';
+          constraint_name = quote_ident(conflict_clause ->> 'constraint');
+          set_expression = conflict_clause ->> 'set_expression';
+          IF action is NOT NULL THEN
+            CASE
+              WHEN action = 'ignore'::text AND constraint_name IS NULL THEN
+                INSERT INTO "public"."user_band" VALUES (NEW.*) ON CONFLICT DO NOTHING RETURNING * INTO r;
+              WHEN action = 'ignore'::text AND constraint_name is NOT NULL THEN
+                EXECUTE 'INSERT INTO "public"."user_band" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO NOTHING RETURNING *' INTO r USING NEW;
+              ELSE
+                EXECUTE 'INSERT INTO "public"."user_band" VALUES ($1.*) ON CONFLICT ON CONSTRAINT ' || constraint_name ||
+                           ' DO UPDATE ' || set_expression || ' RETURNING *' INTO r USING NEW;
+            END CASE;
+            ELSE
+              RAISE internal_error using message = 'action is not found'; RETURN NULL;
+          END IF;
+      END CASE;
+      IF r IS NULL THEN RETURN null; ELSE RETURN r; END IF;
+     ELSE RAISE check_violation using message = 'insert check constraint failed'; RETURN NULL;
+     END IF;
+  END $_$;
+
+
+ALTER FUNCTION hdb_views.user__insert__public__user_band() OWNER TO segmipyqnzfzlq;
 
 --
 -- Name: first_agg(anyelement, anyelement); Type: FUNCTION; Schema: public; Owner: segmipyqnzfzlq
@@ -485,6 +793,20 @@ CREATE TABLE public.band (
 ALTER TABLE public.band OWNER TO segmipyqnzfzlq;
 
 --
+-- Name: user__insert__public__band; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__band AS
+ SELECT band.id,
+    band.name,
+    band."viewableByOthers",
+    band."editableByOthers"
+   FROM public.band;
+
+
+ALTER TABLE hdb_views.user__insert__public__band OWNER TO segmipyqnzfzlq;
+
+--
 -- Name: gig; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
 --
 
@@ -498,6 +820,21 @@ CREATE TABLE public.gig (
 
 
 ALTER TABLE public.gig OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__gig; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__gig AS
+ SELECT gig.id,
+    gig.venue,
+    gig.date,
+    gig.recorded,
+    gig.band
+   FROM public.gig;
+
+
+ALTER TABLE hdb_views.user__insert__public__gig OWNER TO segmipyqnzfzlq;
 
 --
 -- Name: performance; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
@@ -518,6 +855,50 @@ CREATE TABLE public.performance (
 ALTER TABLE public.performance OWNER TO segmipyqnzfzlq;
 
 --
+-- Name: user__insert__public__performance; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__performance AS
+ SELECT performance.id,
+    performance.serial,
+    performance.stars,
+    performance.gig,
+    performance.song,
+    performance.drumkit,
+    performance.key,
+    performance.songkey
+   FROM public.performance;
+
+
+ALTER TABLE hdb_views.user__insert__public__performance OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: session; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
+--
+
+CREATE TABLE public.session (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    "user" uuid,
+    gig uuid
+);
+
+
+ALTER TABLE public.session OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__session; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__session AS
+ SELECT session.id,
+    session."user",
+    session.gig
+   FROM public.session;
+
+
+ALTER TABLE hdb_views.user__insert__public__session OWNER TO segmipyqnzfzlq;
+
+--
 -- Name: song; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
 --
 
@@ -530,6 +911,80 @@ CREATE TABLE public.song (
 
 
 ALTER TABLE public.song OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__song; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__song AS
+ SELECT song.id,
+    song.title,
+    song.artist,
+    song.prehistory
+   FROM public.song;
+
+
+ALTER TABLE hdb_views.user__insert__public__song OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
+--
+
+CREATE TABLE public."user" (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    email text NOT NULL,
+    password text DEFAULT 'changeme'::text NOT NULL,
+    "fullName" text,
+    "stageName" text,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public."user" OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__user; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__user AS
+ SELECT "user".id,
+    "user".email,
+    "user".password,
+    "user"."fullName",
+    "user"."stageName",
+    "user"."createdAt",
+    "user"."updatedAt"
+   FROM public."user";
+
+
+ALTER TABLE hdb_views.user__insert__public__user OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user_band; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
+--
+
+CREATE TABLE public.user_band (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    "user" uuid NOT NULL,
+    band uuid NOT NULL
+);
+
+
+ALTER TABLE public.user_band OWNER TO segmipyqnzfzlq;
+
+--
+-- Name: user__insert__public__user_band; Type: VIEW; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE VIEW hdb_views.user__insert__public__user_band AS
+ SELECT user_band.id,
+    user_band."user",
+    user_band.band
+   FROM public.user_band;
+
+
+ALTER TABLE hdb_views.user__insert__public__user_band OWNER TO segmipyqnzfzlq;
 
 --
 -- Name: song_performances; Type: VIEW; Schema: public; Owner: segmipyqnzfzlq
@@ -617,53 +1072,129 @@ CREATE VIEW public.most_recent_performance AS
 ALTER TABLE public.most_recent_performance OWNER TO segmipyqnzfzlq;
 
 --
--- Name: session; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
---
-
-CREATE TABLE public.session (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    "user" uuid,
-    gig uuid
-);
-
-
-ALTER TABLE public.session OWNER TO segmipyqnzfzlq;
-
---
--- Name: user; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
---
-
-CREATE TABLE public."user" (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    email text NOT NULL,
-    password text DEFAULT 'changeme'::text NOT NULL,
-    "fullName" text,
-    "stageName" text,
-    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE public."user" OWNER TO segmipyqnzfzlq;
-
---
--- Name: user_band; Type: TABLE; Schema: public; Owner: segmipyqnzfzlq
---
-
-CREATE TABLE public.user_band (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    "user" uuid NOT NULL,
-    band uuid NOT NULL
-);
-
-
-ALTER TABLE public.user_band OWNER TO segmipyqnzfzlq;
-
---
 -- Name: remote_schemas id; Type: DEFAULT; Schema: hdb_catalog; Owner: segmipyqnzfzlq
 --
 
 ALTER TABLE ONLY hdb_catalog.remote_schemas ALTER COLUMN id SET DEFAULT nextval('hdb_catalog.remote_schemas_id_seq'::regclass);
+
+
+--
+-- Name: user__insert__public__band id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__band ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__band viewableByOthers; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__band ALTER COLUMN "viewableByOthers" SET DEFAULT true;
+
+
+--
+-- Name: user__insert__public__band editableByOthers; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__band ALTER COLUMN "editableByOthers" SET DEFAULT true;
+
+
+--
+-- Name: user__insert__public__gig id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__gig ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__gig venue; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__gig ALTER COLUMN venue SET DEFAULT 'Leadbone Studios'::text;
+
+
+--
+-- Name: user__insert__public__gig date; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__gig ALTER COLUMN date SET DEFAULT now();
+
+
+--
+-- Name: user__insert__public__gig recorded; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__gig ALTER COLUMN recorded SET DEFAULT true;
+
+
+--
+-- Name: user__insert__public__performance id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__performance ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__performance serial; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__performance ALTER COLUMN serial SET DEFAULT 1;
+
+
+--
+-- Name: user__insert__public__session id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__session ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__song id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__song ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__song prehistory; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__song ALTER COLUMN prehistory SET DEFAULT 0;
+
+
+--
+-- Name: user__insert__public__user id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__user ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
+
+
+--
+-- Name: user__insert__public__user password; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__user ALTER COLUMN password SET DEFAULT 'changeme'::text;
+
+
+--
+-- Name: user__insert__public__user createdAt; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__user ALTER COLUMN "createdAt" SET DEFAULT now();
+
+
+--
+-- Name: user__insert__public__user updatedAt; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__user ALTER COLUMN "updatedAt" SET DEFAULT now();
+
+
+--
+-- Name: user__insert__public__user_band id; Type: DEFAULT; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY hdb_views.user__insert__public__user_band ALTER COLUMN id SET DEFAULT public.gen_random_uuid();
 
 
 --
@@ -787,6 +1318,14 @@ ALTER TABLE ONLY public.session
 
 
 --
+-- Name: session session_user_key; Type: CONSTRAINT; Schema: public; Owner: segmipyqnzfzlq
+--
+
+ALTER TABLE ONLY public.session
+    ADD CONSTRAINT session_user_key UNIQUE ("user");
+
+
+--
 -- Name: song song_pkey; Type: CONSTRAINT; Schema: public; Owner: segmipyqnzfzlq
 --
 
@@ -867,6 +1406,55 @@ CREATE OR REPLACE VIEW public.song_recordings AS
 --
 
 CREATE TRIGGER hdb_table_oid_check BEFORE INSERT OR UPDATE ON hdb_catalog.hdb_table FOR EACH ROW EXECUTE PROCEDURE hdb_catalog.hdb_table_oid_check();
+
+
+--
+-- Name: user__insert__public__band user__insert__public__band; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__band INSTEAD OF INSERT ON hdb_views.user__insert__public__band FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__band();
+
+
+--
+-- Name: user__insert__public__gig user__insert__public__gig; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__gig INSTEAD OF INSERT ON hdb_views.user__insert__public__gig FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__gig();
+
+
+--
+-- Name: user__insert__public__performance user__insert__public__performance; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__performance INSTEAD OF INSERT ON hdb_views.user__insert__public__performance FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__performance();
+
+
+--
+-- Name: user__insert__public__session user__insert__public__session; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__session INSTEAD OF INSERT ON hdb_views.user__insert__public__session FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__session();
+
+
+--
+-- Name: user__insert__public__song user__insert__public__song; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__song INSTEAD OF INSERT ON hdb_views.user__insert__public__song FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__song();
+
+
+--
+-- Name: user__insert__public__user user__insert__public__user; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__user INSTEAD OF INSERT ON hdb_views.user__insert__public__user FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__user();
+
+
+--
+-- Name: user__insert__public__user_band user__insert__public__user_band; Type: TRIGGER; Schema: hdb_views; Owner: segmipyqnzfzlq
+--
+
+CREATE TRIGGER user__insert__public__user_band INSTEAD OF INSERT ON hdb_views.user__insert__public__user_band FOR EACH ROW EXECUTE PROCEDURE hdb_views.user__insert__public__user_band();
 
 
 --
