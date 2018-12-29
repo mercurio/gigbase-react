@@ -1,4 +1,4 @@
-import history from '../history';
+import {routeGo} from '../history';
 import auth0 from 'auth0-js';
 import {AUTH_CONFIG} from './auth0-variables';
 
@@ -34,7 +34,7 @@ export default class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
       } else if (err) {
-        history.replace('/');
+        routeGo('/');
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
@@ -70,7 +70,7 @@ export default class Auth {
     localStorage.setItem('auth0:email', authResult.idTokenPayload.email)
 
     // navigate to the home route
-    history.replace('/songs');
+    routeGo('/')
   }
 
   renewSession() {
@@ -95,7 +95,7 @@ export default class Auth {
     localStorage.removeItem('isLoggedIn');
 
     // navigate to the home route
-    history.replace('/home');
+    routeGo('/');
   }
 
   isAuthenticated() {

@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 
 import GigCard from './GigCard'
-import history from '../history';
+import {routePush} from '../history';
 import {today} from '../util'
 import {getSessionId} from '../sessionId'
 
@@ -22,6 +22,7 @@ import {
   SET_SESSION_GIG_MUTATION,
   GET_OPENED_GIG_AND_PERFORMANCES_QUERY,
   GIG_BANDS_AND_PERFORMANCES_QUERY,
+  GET_OPENED_GIG_QUERY,
 } from '../db'
 
 
@@ -62,6 +63,8 @@ class GigTableComponent extends React.Component {
       mutation: NEW_GIG_MUTATION,
       variables: {date: today()},
       refetchQueries: [
+        {query: GET_OPENED_GIG_AND_PERFORMANCES_QUERY, variables: {session: getSessionId()}},
+        {query: GET_OPENED_GIG_QUERY, variables: {session: getSessionId()}},
         {query: GET_GIGS_QUERY}
       ]
     })
@@ -80,11 +83,11 @@ class GigTableComponent extends React.Component {
       ]
     })
 
-    history.push(`/gig/${id}`)
+    routePush(`/gig/${id}`)
   }
 
   onOpenGig = (id) => {
-    history.push(`/gig/${id}`)
+    routePush(`/gig/${id}`)
   }
 
   render() {

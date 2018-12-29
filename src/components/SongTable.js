@@ -17,7 +17,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button'
 
-import history from '../history';
+import {routePush} from '../history';
 import {getSessionId} from '../sessionId'
 import {SONGS_QUERY} from '../db'
 
@@ -66,7 +66,7 @@ class SongTableComponent extends React.Component {
    */
   addPerfOrSong = (perf,gig,song) => () => {
     perf = perf || 'new'
-    history.push(`/addPerf/${perf}/${gig}/${song}`)
+    routePush(`/addPerf/${perf}/${gig}/${song}`)
   }
 
   render() {

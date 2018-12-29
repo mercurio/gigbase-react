@@ -15,7 +15,7 @@ import {fade} from '@material-ui/core/styles/colorManipulator'
 import {withStyles} from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 
-import history from '../history';
+import {routePush} from '../history';
 import {LoggedInUser} from './LoggedInUser'
 import SongIcon from './SongIcon'
 import GigIcon from './GigIcon'
@@ -36,14 +36,14 @@ class TopBar extends React.Component {
    * Go to gig list to select or create a gig
    */
   handleNewGig = event => {
-    history.push('/gigs')
+    routePush('/gigs')
   }
 
   /*
    * Go to the user profile form
    */
   handleMyAccount = () => {
-    history.push('/user')
+    routePush('/user')
   }
 
   /*
@@ -69,9 +69,9 @@ class TopBar extends React.Component {
 
     const id = result.data.session_by_pk.gig;
     if(id)
-      history.push(`/gig/${id}`)
+      routePush(`/gig/${id}`)
     else
-      history.push('/gigs')
+      routePush('/gigs')
   }
 
   /*
@@ -96,7 +96,7 @@ class TopBar extends React.Component {
    * Go to the song edit page to add a new song
    */
   handleNewSong = () => {
-    history.push('/song/new')
+    routePush('/song/new')
   }
 
   /*
@@ -104,7 +104,7 @@ class TopBar extends React.Component {
    * goes to the song list.
    */
   handleOpenDrawer = () => {
-    history.push('/songs')
+    routePush('/songs')
   }
 
   /*

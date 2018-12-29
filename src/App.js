@@ -16,7 +16,6 @@ import Gig from './components/Gig'
 import Song from './components/Song'
 import AddPerformance from './components/AddPerformance'
 
-import history from './history'
 import {hasSessionId, setSessionId} from './sessionId'
 
 import {
@@ -37,7 +36,6 @@ class App extends Component {
     addperf: AddPerformance
   }
 
-  goTo = (route) => history.replace(`/$route`)
   login = () => this.props.auth.login()
   logout = () => this.props.auth.logout()
 
@@ -64,7 +62,7 @@ class App extends Component {
     const result2 = await this.props.client.mutate({
       mutation: OPEN_SESSION_UPSERT,
       variables: {user: userid},
-      refetchQueries: []
+      refetchQueries: [ ]
     })
 
     setSessionId(result2.data.insert_session.returning[0].id)

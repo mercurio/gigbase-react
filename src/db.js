@@ -265,7 +265,10 @@ export const OPEN_SESSION_UPSERT = gql`
       objects: [
         {user: $user}
       ]
-      on_conflict: {constraint: session_user_key}
+      on_conflict: {
+        constraint: session_user_key,
+        update_columns: [id]
+      }
     ) {
       affected_rows
       returning {

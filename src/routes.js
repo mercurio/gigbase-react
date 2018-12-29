@@ -1,19 +1,19 @@
-import React from 'react';
-import {Route, Router} from 'react-router-dom';
+import React from 'react'
+import {Route, Router} from 'react-router-dom'
 
-import ApolloClient from 'apollo-client';
-import {createHttpLink} from 'apollo-link-http';
-import {setContext} from 'apollo-link-context';
-import {ApolloProvider} from 'react-apollo';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import ApolloClient from 'apollo-client'
+import {createHttpLink} from 'apollo-link-http'
+import {setContext} from 'apollo-link-context'
+import {ApolloProvider} from 'react-apollo'
+import {InMemoryCache} from 'apollo-cache-inmemory'
 import {persistCache} from 'apollo-cache-persist'
 
 import Grid from '@material-ui/core/Grid'
 
-import App from './App';
-import Callback from './Callback/Callback';
-import Auth from './Auth/Auth';
-import history from './history';
+import {history} from './history'
+import App from './App'
+import Callback from './Callback/Callback'
+import Auth from './Auth/Auth'
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GIGBASE_ENDPOINT,

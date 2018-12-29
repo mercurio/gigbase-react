@@ -16,7 +16,7 @@ import RecChip from './RecChip'
 import BandMenu from './BandMenu'
 import PerformanceCard from './PerformanceCard'
 
-import history from '../history';
+import {routePop} from '../history';
 import {today} from '../util'
 import {getSessionId} from '../sessionId'
 
@@ -103,14 +103,14 @@ class GigComponent extends React.Component {
       ]
     })
 
-    history.goBack()
+    routePop()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    history.goBack()
+    routePop()
   }
 
   /*

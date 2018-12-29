@@ -10,7 +10,7 @@ import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 
-import history from '../history';
+import {routePop} from '../history';
 import {getSessionId} from '../sessionId'
 
 import {
@@ -78,14 +78,14 @@ class UserProfileComponent extends React.Component {
       ]
     })
 
-    history.goBack()
+    routePop()
   }
 
   /*
    * Cancel changes
    */
   cancel = () => {
-    history.goBack()
+    routePop()
   }
 
   render() {
