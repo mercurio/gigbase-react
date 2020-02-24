@@ -19,6 +19,7 @@ export const LoggedInUser = () => (
       if(loading) return "Loading...";
       if(error) return "Please log in";
 
+      debugger
       const u = data.session_by_pk.userByuser;
       return u.stageName || u.fullName || u.email
     }}

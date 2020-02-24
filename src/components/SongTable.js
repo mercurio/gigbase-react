@@ -19,15 +19,16 @@ import Button from '@material-ui/core/Button'
 
 import {routePush} from '../history';
 import {getSessionId} from '../sessionId'
-import {SONGS_QUERY} from '../db'
+import {useGraphQL, SONGS_QUERY} from '../db'
 
-
-const SongData = ({onAddGenFunc}) => (
-  <Query query={SONGS_QUERY} variables={{session:getSessionId()}}>
-  {({loading, error, data}) => {
+/*
+ * Handle the results of a query, either GraphQL or REST
+ */
+const handleQuery = (loading, error, data, onAddGenFunc) => {
     if(loading) return <TableRow key="1"><CustomTableCell>Loading</CustomTableCell></TableRow>;
     if(error) return <TableRow key="1"><CustomTableCell>Error: ${error.toString()}</CustomTableCell></TableRow>;
 
+    debugger
     return data.most_recent_performance.map((p, index) => (
       <TableRow key={index} hover={true}>
         <CustomTableCell>{p.drumkit || ''}</CustomTableCell>
@@ -43,7 +44,12 @@ const SongData = ({onAddGenFunc}) => (
         }
       </TableRow>
     ));
-  }}
+  }
+
+/* For graphQL */
+const SongData = ({onAddGenFunc}) => (
+  <Query query={SONGS_QUERY} variables={{session:getSessionId()}}>
+  {({loading, error, data}) => handleQuery(loading, error, data, onAddGenFunc)}
   </Query>
 );
 
@@ -61,6 +67,36 @@ const CustomTableCell = withStyles(theme => ({
 class SongTableComponent extends React.Component {
 
   /*
+   * Initialize state when doing REST queries
+   */
+  constructor() {
+    super()
+    if(useGraphQL) return
+
+    this.state = {
+      loading: true,
+      error: null,
+      data: null
+    }
+  }
+
+  /*
+   * Fetch the data upon mount, if REST
+   */
+  componentDidMount() {
+    if(useGraphQL) return
+
+    this.setState({loading: true})
+
+    const url = `http://maya/api/songs.php?session=${getSessionId()}`
+
+    fetch(url)
+    .then(results => results.json())
+    .then(data => {debugger; this.setState({loading: false, data: data})})
+    .catch(error => this.setState({loading: false, error: `${error}  URL: ${url}`}))
+  }
+
+  /*
    * Given a performance and a gig, return a function that routes to
    * AddPerformance. We also take a song id, in case we have no performances yet.
    */
@@ -71,6 +107,13 @@ class SongTableComponent extends React.Component {
 
   render() {
     const {classes} = this.props;
+
+    let data
+    if(useGraphQL)
+      data = <SongData className={classes.row} onAddGenFunc={this.addPerfOrSong}/>
+    else
+      data = handleQuery(this.state.loading, this.state.error, this.state.data, this.addPerfOrSong)
+
 
     return (
       <Paper className={classes.root}>
@@ -84,7 +127,7 @@ class SongTableComponent extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            <SongData className={classes.row} onAddGenFunc={this.addPerfOrSong}/>
+            {data}
           </TableBody>
         </Table>
       </Paper>

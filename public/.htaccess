@@ -1,0 +1,3 @@
+AuthType Basic
+AuthName "GigBase"
+AuthUserFile "/kunden/homepages/13/d238907452/htdocs/.htpasswds/gigbase/passwd"

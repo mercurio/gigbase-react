@@ -1,6 +1,6 @@
-import createHistory from 'history/createBrowserHistory'
+import {createBrowserHistory} from 'history'
 
-const history = createHistory()
+const history = createBrowserHistory()
 
 const routeGo = (route) => history.replace(route)
 const routePush = (route) => history.push(route)

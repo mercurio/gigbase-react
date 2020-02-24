@@ -1,11 +1,14 @@
 /*
  * Database operations
  *
- * Queries and mutations used throughout the application
+ * Queries and mutations used throughout the application.
+ * This now handles both the GraphQL and REST interfaces.
  */
 import gql from 'graphql-tag'
 
-/** Queries **/
+export const useGraphQL = true
+
+/** GraphQL Queries **/
 
 /*
  * See if the username/password is valid
